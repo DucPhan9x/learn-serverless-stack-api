@@ -119,7 +119,7 @@ export default function Notes() {
 
   return (
     <div className="Notes">
-      {note && (
+      {note ? (
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="content">
             <Form.Control
@@ -162,6 +162,8 @@ export default function Notes() {
             Delete
           </LoaderButton>
         </Form>
+      ) : (
+        <div>Loading note ...</div>
       )}
     </div>
   );
