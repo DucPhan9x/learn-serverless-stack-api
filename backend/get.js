@@ -1,17 +1,15 @@
 import handler from "./libs/handler-lib";
 import dynamoDb from "./libs/dynamodb-lib";
-// import debug from "./services/notes/libs/debug-lib";
 
-// debug(
-//   "This stores the message and prints to CloudWatch if Lambda function later throws an exception"
-// );
 export const main = handler(async (event, context) => {
   const params = {
     TableName: process.env.tableName,
     // 'Key' defines the partition key and sort key of the item to be retrieved
+    // - 'userId': Identity Pool identity id of the authenticated user
+    // - 'noteId': path parameter
     Key: {
-      // userId: event.requestContext.identity.cognitoIdentityId, // The id of the author
-      // noteId: event.pathParameters.id, // The id of the note from the path
+      userId: event.requestContext.identity.cognitoIdentityId,
+      noteId: event.pathParameters.id,
     },
   };
 
@@ -19,6 +17,9 @@ export const main = handler(async (event, context) => {
   if (!result.Item) {
     throw new Error("Item not found.");
   }
+
+  // Set a timeout
+  await new Promise((resolve) => setTimeout(resolve, 10000));
 
   // Return the retrieved item
   return result.Item;
